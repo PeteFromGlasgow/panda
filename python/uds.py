@@ -435,9 +435,11 @@ class IsoTpMessage():
           raise MessageTimeoutError("timeout waiting for response")
     except AssertionError:
       # abort/overflow
-      print("Sent abort/overflow flow control")
+      print("Sent abort/overflow flow control: {}".format(self._can_client.tx_addr))
       msg = b"\x32\x00\x00".ljust(self.max_len, b"\x00")
       self._can_client.send([msg])
+      time.sleep(0.1)
+      assert 0
     finally:
       if self.debug and self.rx_dat:
         print(f"ISO-TP: RESPONSE - {hex(self._can_client.rx_addr)} 0x{bytes.hex(self.rx_dat)}")
